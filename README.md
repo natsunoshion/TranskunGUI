@@ -1,6 +1,4 @@
-# TranskunGUI
-
-Flutter-based GUI for Piano Transcription Using Transkun
+# TranskunGUI: Flutter-based GUI for Piano Transcription Using Transkun
 
 ## Demo
 
