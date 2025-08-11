@@ -297,7 +297,7 @@ def trim_midi_silence(mid, debug=False):
             print(f"MIDI裁剪失败: {e}")
 
 # 核心转换函数
-def process_audio(input_file, use_cuda=True, use_quantize=True, progress=gr.Progress()):
+def process_audio(input_file, use_cuda=True, use_quantize=True, progress=gr.Progress(), file_progress_offset=0.0, file_progress_scale=1.0):
     """
     处理音频文件并生成MIDI文件。
 
@@ -305,6 +305,8 @@ def process_audio(input_file, use_cuda=True, use_quantize=True, progress=gr.Prog
     :param use_cuda: 是否使用CUDA加速。
     :param use_quantize: 是否对生成的MIDI文件进行量化处理。
     :param progress: Gradio进度条对象。
+    :param file_progress_offset: 进度条的起始偏移量，用于批量处理。
+    :param file_progress_scale: 进度条的缩放比例，用于批量处理。
     :return: 包含处理结果的字典。
     """
     temp_dir = None
@@ -326,7 +328,7 @@ def process_audio(input_file, use_cuda=True, use_quantize=True, progress=gr.Prog
         device = "cuda" if use_cuda and cuda_available else "cpu"
 
         start_time = time.time()
-        progress(0, desc="准备模型...")
+        progress(file_progress_offset, desc="准备模型...")
 
         # 加载模型和配置
         default_weight = os.path.join(current_dir, "models\\2.0.pt")
@@ -354,7 +356,7 @@ def process_audio(input_file, use_cuda=True, use_quantize=True, progress=gr.Prog
             model.load_state_dict(checkpoint["best_state_dict"], strict=False)
         model.eval()
 
-        progress(0.2, desc="读取音频...")
+        progress(file_progress_offset + 0.2 * file_progress_scale, desc="读取音频...")
         # 读取并处理音频
         fs, audio = transkun.transcribe.readAudio(input_file)
         if fs != model.fs:
@@ -363,19 +365,19 @@ def process_audio(input_file, use_cuda=True, use_quantize=True, progress=gr.Prog
 
         x = torch.from_numpy(audio).to(device)
 
-        progress(0.4, desc="转录中...")
+        progress(file_progress_offset + 0.4 * file_progress_scale, desc="转录中...")
         # 转录
         with torch.no_grad():
             notes_est = model.transcribe(x)
 
-        progress(0.7, desc="保存MIDI...")
+        progress(file_progress_offset + 0.7 * file_progress_scale, desc="保存MIDI...")
         # 保存MIDI到临时目录，将 Path 对象转换为字符串
         output_midi = transkun.transcribe.writeMidi(notes_est)
         output_midi.write(str(output_file))
 
         # 如果勾选了规整化选项，则进行MIDI规整化
         if use_quantize:
-            progress(0.8, desc="规整化MIDI...")
+            progress(file_progress_offset + 0.8 * file_progress_scale, desc="规整化MIDI...")
             try:
                 # The midi_quantize function will now write the output file with the expected name
                 # midi_quantize函数现在将以预期的名称写入输出文件
@@ -387,7 +389,7 @@ def process_audio(input_file, use_cuda=True, use_quantize=True, progress=gr.Prog
         end_time = time.time()
         process_time = round(end_time - start_time, 2)
 
-        progress(1.0, desc="完成！")
+        progress(file_progress_offset + 1.0 * file_progress_scale, desc="完成！")
 
         # 返回结果
         result_files = [str(output_file)]
@@ -422,7 +424,7 @@ def create_interface():
             with gr.Column(scale=2):
                 # 输入部分
                 gr.Markdown("### 1. 选择输入音频文件")
-                input_audio = gr.Audio(type="filepath", label="输入音频文件", interactive=True)
+                input_audio = gr.File(label="输入音频文件", file_count="multiple", file_types=["audio"], interactive=True)
 
                 gr.Markdown("### 2. 选择转换选项")
                 with gr.Row():
@@ -445,19 +447,81 @@ def create_interface():
                 status_output = gr.Textbox(label="状态", value="准备就绪", interactive=False)
                 file_output = gr.File(label="生成的MIDI文件", interactive=False, file_count="multiple")
 
-        # 处理函数
-        def on_convert(audio_path, use_cuda, use_quantize, progress=gr.Progress()):
-            if not audio_path:
-                return "请选择输入音频文件", []
+                # 创建一个隐藏的文本框来存储文件路径
+                file_paths_store = gr.State([])
 
-            result = process_audio(audio_path, use_cuda, use_quantize, progress)
-            return result["output"], result["files"]
+                # 下载按钮
+                with gr.Row():
+                    download_all_btn = gr.Button("一键下载全部文件", variant="secondary", visible=False)
+                    download_status = gr.Textbox(label="下载状态", value="", visible=False, interactive=False)
+
+        # 处理函数
+        def on_convert(audio_paths, use_cuda, use_quantize, progress=gr.Progress()):
+            if not audio_paths:
+                return "请选择输入音频文件", [], gr.update(visible=False)
+
+            all_files = []
+            results = []
+            total_files = len(audio_paths)
+
+            for i, audio_path in enumerate(audio_paths):
+                file_name = Path(audio_path).name
+                progress_offset = (i / total_files)
+                progress_scale = (1 / total_files) * 0.9
+
+                progress(progress_offset, desc=f"处理文件 {i+1}/{total_files}: {file_name}")
+                result = process_audio(audio_path, use_cuda, use_quantize, progress,
+                                      file_progress_offset=progress_offset,
+                                      file_progress_scale=progress_scale)
+                results.append(result["output"])
+                all_files.extend(result["files"])
+
+            progress(1.0, desc="全部完成！")
+            download_btn_update = gr.update(visible=True) if all_files else gr.update(visible=False)
+            download_status_update = gr.update(visible=False)
+            return f"转换完成！共处理 {total_files} 个文件\n" + "\n".join(results), all_files, download_btn_update, download_status_update, all_files
+
+        # 下载所有文件的函数
+        def download_all_files(file_paths, status_output=None):
+            import tempfile
+            import os
+            import shutil
+            import zipfile
+            from pathlib import Path
+
+            if not file_paths or len(file_paths) == 0:
+                return None, gr.update(value="没有文件可下载", visible=True), gr.update(visible=False)
+
+            try:
+                # 创建临时目录用于存放文件
+                temp_dir = tempfile.mkdtemp(prefix="midi_files_")
+
+                # 创建ZIP文件
+                zip_path = os.path.join(temp_dir, "all_midi_files.zip")
+
+                # 直接创建ZIP文件，不使用shutil.make_archive
+                with zipfile.ZipFile(zip_path, 'w') as zipf:
+                    for file_path in file_paths:
+                        if os.path.exists(file_path):
+                            # 只添加文件名，不包含路径
+                            zipf.write(file_path, os.path.basename(file_path))
+
+                return zip_path, gr.update(value="下载准备完成，请点击上方文件链接下载", visible=True), gr.update(visible=False)
+            except Exception as e:
+                return None, gr.update(value=f"下载准备失败: {str(e)}", visible=True), gr.update(visible=True)
 
         # 绑定按钮事件
         convert_btn.click(
             fn=on_convert,
             inputs=[input_audio, use_cuda, use_quantize],
-            outputs=[status_output, file_output]
+            outputs=[status_output, file_output, download_all_btn, download_status, file_paths_store]
+        )
+
+        # 绑定下载按钮事件
+        download_all_btn.click(
+            fn=download_all_files,
+            inputs=[file_paths_store, download_status],
+            outputs=[file_output, download_status, download_all_btn]
         )
 
     return app
