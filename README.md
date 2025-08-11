@@ -1,4 +1,4 @@
-# TranskunGUI: Flutter-based GUI for Piano Transcription Using Transkun
+# TranskunGUI: Gradio-based GUI for Piano Transcription Using Transkun
 
 ## Demo
 
@@ -6,7 +6,7 @@
 
 ## About
 
-This repo contains a simple GUI implementation for piano transcription using Flet framework, based on the following research:
+This repo contains a simple GUI implementation for piano transcription using Gradio framework, based on the following research:
 
 > Yujia Yan and Zhiyao Duan, Scoring intervals using non-hierarchical transformer for automatic piano transcription, in Proc. International Society for Music Information Retrieval Conference (ISMIR), 2024, [Paper](https://arxiv.org/abs/2404.09466)
 
