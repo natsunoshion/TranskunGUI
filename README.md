@@ -6,6 +6,8 @@
 
 ## About
 
+预计我会持续维护这个项目，如果有问题欢迎通过Bilibili联系我。如果对您有帮助，希望能够给一个小小的Star！
+
 This repo contains a simple GUI implementation for piano transcription using Gradio framework, based on the following research:
 
 > Yujia Yan and Zhiyao Duan, Scoring intervals using non-hierarchical transformer for automatic piano transcription, in Proc. International Society for Music Information Retrieval Conference (ISMIR), 2024, [Paper](https://arxiv.org/abs/2404.09466)
@@ -26,14 +28,14 @@ Using this GUI, you can transcribe piano recordings into MIDI files with an intu
 1. Run the application.
 2. Select audio or video files using the GUI interface.
 3. (Optional) Choose an output directory for the transcribed MIDI files.
-4. If you do not select an output path, the MIDI file will be saved by default in the same directory as the input file, with the same name but a `.mid` extension.
+4. Transcribe now!
 
 ## Building from Source
 
 ### Windows
 
 ```bash
-pyinstaller --onefile --windowed --name TranskunGUI ^
+pyinstaller --onedir --windowed --name TranskunGUI ^
     --add-data="models;models" ^
     --add-data="C:\path\to\Python\Lib\site-packages\transkun;transkun" ^
     --add-binary="ffmpeg_bin\ffmpeg.exe;ffmpeg_bin" ^
@@ -45,7 +47,7 @@ pyinstaller --onefile --windowed --name TranskunGUI ^
 ### macOS
 
 ```bash
-pyinstaller --onefile --windowed --name TranskunGUI \
+pyinstaller --onedir --windowed --name TranskunGUI \
     --add-data="models:models" \
     --add-data="/Users/lollikit/.pyenv/versions/3.10.13/lib/python3.10/site-packages/transkun:transkun" \
     --hidden-import=mir_eval \
