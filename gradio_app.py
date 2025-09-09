@@ -434,10 +434,23 @@ def create_interface():
                         interactive=cuda_available
                     )
 
+
+                def show_warning(is_checked):
+                    """Show a warning message when the checkbox is checked."""
+                    if is_checked:
+                        gr.Warning("注意：开启此项可能影响踏板效果。")
+                        return gr.update(info="")
+                    else:
+                        return gr.update(info="")
                 use_quantize = gr.Checkbox(
-                    label="使用MIDI规整化，让AI扒谱的输出更加美观易读（附带有_quantized后缀的输出文件）",
-                    value=True,
-                    info="基于简单的算法，不会影响扒谱的精确性"
+                    label="使用MIDI规整化（附带有_quantized后缀的输出文件），建议只用于阅读MIDI（❗注意：此项可能影响踏板效果）",
+                    value=False
+                )
+
+                use_quantize.change(
+                    fn=show_warning,
+                    inputs=use_quantize,
+                    outputs=use_quantize
                 )
 
                 convert_btn = gr.Button("开始转换", variant="primary")

@@ -4,9 +4,15 @@
 
 ![TranskunGUI Demo](assets/image.png)
 
-## About
+## Usage
 
 预计我会持续维护这个项目，如果有问题欢迎通过Bilibili联系我。如果对您有帮助，希望能够给一个小小的Star！
+
+请访问 [Release 页面](https://github.com/natsunoshion/TranskunGUI/releases)下载最新版本。
+
+Please visit the [Release page](https://github.com/natsunoshion/TranskunGUI/releases) to download the latest version.
+
+## About
 
 This repo contains a simple GUI implementation for piano transcription using Gradio framework, based on the following research:
 
@@ -32,30 +38,4 @@ Using this GUI, you can transcribe piano recordings into MIDI files with an intu
 
 ## Building from Source
 
-### Windows
-
-```bash
-pyinstaller --onedir --windowed --name TranskunGUI ^
-    --add-data="models;models" ^
-    --add-data="C:\path\to\Python\Lib\site-packages\transkun;transkun" ^
-    --add-binary="ffmpeg_bin\ffmpeg.exe;ffmpeg_bin" ^
-    --add-binary="ffmpeg_bin\ffprobe.exe;ffmpeg_bin" ^
-    --hidden-import=mir_eval ^
-    .\main.py
-```
-
-### macOS
-
-```bash
-pyinstaller --onedir --windowed --name TranskunGUI \
-    --add-data="models:models" \
-    --add-data="/Users/lollikit/.pyenv/versions/3.10.13/lib/python3.10/site-packages/transkun:transkun" \
-    --hidden-import=mir_eval \
-    ./main.py
-```
-
-> **Note**
->
-> - Please modify paths according to your actual environment.
-> - Windows uses `;` as path separator, macOS uses `:`.
-> - If including ffmpeg, ensure the binary file paths are correct.
+For building from source, please refer to the instructions in [Pyinstaller](https://pyinstaller.org/en/stable/).
