@@ -2,13 +2,17 @@
 
 ## Demo
 
+提供Huggingface Space试用版本：[Huggingface Space](https://huggingface.co/spaces/Lollikit/TranskunGUI) 即可体验。（由于使用免费的CPU，速度可能稍慢）
+
+A new Huggingface Demo is available! Try it with [Huggingface Space](https://huggingface.co/spaces/Lollikit/TranskunGUI)! (Using free CPU, may be slow)
+
 ![TranskunGUI Demo](assets/image.png)
 
 ## Usage
 
 预计我会持续维护这个项目，如果有问题欢迎通过Bilibili联系我。如果对您有帮助，希望能够给一个小小的Star！
 
-请访问 [Release 页面](https://github.com/natsunoshion/TranskunGUI/releases)下载最新版本。
+请访问 [Release 页面](https://github.com/natsunoshion/TranskunGUI/releases) 下载最新版本。
 
 Please visit the [Release page](https://github.com/natsunoshion/TranskunGUI/releases) to download the latest version.
 
@@ -38,4 +42,4 @@ Using this GUI, you can transcribe piano recordings into MIDI files with an intu
 
 ## Building from Source
 
-For building from source, please refer to the instructions in [Pyinstaller](https://pyinstaller.org/en/stable/).
+For building from source, please refer to the instructions in [Pyinstaller](https://pyinstaller.org/en/stable/). Use `TranskunGUI.spec` in this repository.
