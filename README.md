@@ -12,6 +12,10 @@ A new Huggingface Demo is available! Try it with [Huggingface Space](https://hug
 
 ![TranskunGUI Demo](assets/image.png)
 
+Direct MIDI outputs be like:
+
+![TranskunGUI Output](assets/output.png)
+
 ## Usage
 
 请访问 [Release 页面](https://github.com/natsunoshion/TranskunGUI/releases) 下载最新版本。
