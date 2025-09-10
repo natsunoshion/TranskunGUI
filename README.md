@@ -1,16 +1,18 @@
 # TranskunGUI: Gradio-based GUI for Piano Transcription Using Transkun
 
+预计我会持续维护这个项目，如果有问题欢迎通过Bilibili联系我。如果对您有帮助，希望能够给一个小小的Star，这是对我的最大的支持！
+
+If you find this project helpful, feel free to give it a star!
+
 ## Demo
 
-提供Huggingface Space试用版本：[Huggingface Space](https://huggingface.co/spaces/Lollikit/TranskunGUI) 即可体验。（由于使用免费的CPU，速度可能稍慢）
+现已提供Huggingface Space试用版本，访问 [Huggingface Space](https://huggingface.co/spaces/Lollikit/TranskunGUI) 即可体验！（由于使用免费的CPU，速度可能稍慢，大约一首歌2-3分钟）
 
 A new Huggingface Demo is available! Try it with [Huggingface Space](https://huggingface.co/spaces/Lollikit/TranskunGUI)! (Using free CPU, may be slow)
 
 ![TranskunGUI Demo](assets/image.png)
 
 ## Usage
-
-预计我会持续维护这个项目，如果有问题欢迎通过Bilibili联系我。如果对您有帮助，希望能够给一个小小的Star！
 
 请访问 [Release 页面](https://github.com/natsunoshion/TranskunGUI/releases) 下载最新版本。
 
