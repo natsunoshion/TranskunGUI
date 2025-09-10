@@ -43,8 +43,7 @@ Using this GUI, you can transcribe piano recordings into MIDI files with an intu
 
 1. Run the application.
 2. Select audio or video files using the GUI interface.
-3. (Optional) Choose an output directory for the transcribed MIDI files.
-4. Transcribe now!
+3. Transcribe now!
 
 ## Building from Source
 
