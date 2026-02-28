@@ -331,8 +331,8 @@ def process_audio(input_file, use_cuda=True, use_quantize=True, progress=gr.Prog
         progress(file_progress_offset, desc="准备模型...")
 
         # 加载模型和配置
-        default_weight = os.path.join(current_dir, "models\\2.0.pt")
-        default_conf = os.path.join(current_dir, "models\\2.0.conf")
+        default_weight = os.path.join(current_dir, "models", "2.0.pt")
+        default_conf = os.path.join(current_dir, "models", "2.0.conf")
 
         # 检查模型文件是否存在
         if not os.path.exists(default_weight) or not os.path.exists(default_conf):
